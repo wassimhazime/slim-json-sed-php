@@ -3,6 +3,8 @@
 require 'confing.php';
 require 'Slim/Slim.php';
 
+
+
 function login($data, $db) {
 
     $sql = 'select  * from user where nom = ?  and  passe = ?';
@@ -46,10 +48,10 @@ $app->put('/idproduit', function() use ($app) {
     $db = getDB();
     $data = json_decode($json, true);
     if (login($data, $db)) {
-     $sql = "update produit set `nom` = ?,`marque` =? where id =?";
+     $sql = "update produit set `nom` = ?,`marque` =?,`image` =? where id =?";
 
         $result = $db->prepare($sql);
-        $result->execute(array($data['nomproduit'], $data['marqueproduit'], $data['idproduit']));
+        $result->execute(array($data['nomproduit'], $data['marqueproduit'],$data['imageproduit'], $data['idproduit']));
         if ($result) {
             $app->response->setStatus(200);
             echo '{"flag": "true","msg": "item successfully updated"}';
@@ -84,9 +86,9 @@ $app->post('/produit', function() use ($app) {
     $db = getDB();
     $data = json_decode($json, true);
         if (login($data, $db)) {
-            $sql = "insert into produit (`nom`,`marque`) values (?,?)";
+            $sql = "insert into produit (`nom`,`marque`,`image`) values (?,?,?)";
             $result = $db->prepare($sql);
-            $result->execute(array($data['nomproduit'], $data['marqueproduit']));
+            $result->execute(array($data['nomproduit'], $data['marqueproduit'],$data['imageproduit']));
             if ($result) {
                 $app->response->setStatus(201);
                 echo '{"flag": "true","msg": "item successfully added"}';
@@ -99,11 +101,14 @@ $app->post('/produit', function() use ($app) {
 // select name methode GET
 $app->get('/produit', function() use ($app) {
     $db = getDB();
-    $sql = "SELECT nom from produit";
+    $sql = "SELECT nom,image from produit";
     $stmt = $db->query($sql);
     $items = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
     foreach ($items as $value) {
         echo "<center><br>";
+        
+        echo '<img src='."/webservice/".$value['image'].'>';
         echo"||" . $value['nom'] . "||";
     }
 });

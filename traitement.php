@@ -1,14 +1,25 @@
 <?php
+session_start();
 
 require_once 'fonction.php';
+$fichier=array('name'=>"");
 if ($_POST['passe'] != "" and $_POST['nom'] != "") {
+    
+   if (isset($_FILES['monfichier']) AND $_FILES['monfichier']['error'] == 0) {
+             $fichier=$_FILES['monfichier'];
+         if ($fichier['size'] <= 1000000) {
+          move_uploaded_file($fichier['tmp_name'],'FICHIER/'.$fichier['name']);
+                                           }
+}
+   
     $json = json_encode(array(
                 'nom' => $_POST['nom'],
                 'passe' => md5($_POST['passe']),
                 'idproduit' => $_POST['idproduit'],
                 'nomproduit' => $_POST['nomproduit'],
                 'marqueproduit' => $_POST['marqueproduit'],
-                'imageproduit' => $_POST['imageproduit']
+                'imageproduit' => 'FICHIER/'.$fichier['name']
+            
     ));
     
     

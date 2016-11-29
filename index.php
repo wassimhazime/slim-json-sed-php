@@ -8,7 +8,7 @@
         <h1>select produit</h1>
         
         
-        <form action="traitement.php" method='POST'>
+        <form action="traitement.php" method='POST'  enctype="multipart/form-data">
             <table>
                  
                 <tr><td> nom : </td><td><input type="text" name="nom" /><br/></td></tr>
@@ -16,7 +16,7 @@
             <tr><td>id produit :</td><td><input type="text" name="idproduit" /><br></td></tr>
             <tr><td>nom produit :</td><td><input type="text" name="nomproduit" /><br></td></tr>
             <tr><td>marque produit :</td><td><input type="text" name="marqueproduit" /><br></td></tr>
-            <tr><td>image produit :</td><td><input type="text" name="imageproduit" /><br></td></tr>
+            <tr><td>image produit :</td><td><input type="file" name="monfichier" /><br /><br></td></tr>
             </table>
             <table>
             <td> 

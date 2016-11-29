@@ -4,8 +4,9 @@ $dbhost="localhost";
 $dbuser="root";
 $dbpass="";
 $dbname="webservice";
-$dbConnection = new PDO("mysql:host=$dbhost;dbname=$dbname", $dbuser, $dbpass); 
-$dbConnection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+$dbConnection = new PDO("mysql:host=$dbhost;dbname=$dbname", $dbuser, $dbpass,
+        array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION)); 
+// or $dbConnection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 return $dbConnection;
 }
 ?>
