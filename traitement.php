@@ -8,9 +8,11 @@ if ($_POST['passe'] != "" and $_POST['nom'] != "") {
    if (isset($_FILES['monfichier']) AND $_FILES['monfichier']['error'] == 0) {
              $fichier=$_FILES['monfichier'];
              $p= pathinfo($fichier['name']);
-             $nomfichier='FICHIER/'. time().$p['extension'];
+             $nomfichier='FICHIER/s'. time()."s.".$p['extension'];
          if ($fichier['size'] <= 1000000) {
           move_uploaded_file($fichier['tmp_name'],$nomfichier);
+          if($p['extension']=='jpg'){
+          Redimensionner_jpg($nomfichier,$nomfichier);}
                                            }
 }
    
