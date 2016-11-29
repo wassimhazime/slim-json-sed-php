@@ -86,7 +86,7 @@ $app->post('/produit', function() use ($app) {
     $db = getDB();
     $data = json_decode($json, true);
         if (login($data, $db)) {
-            $sql = "insert into produit (`nom`,`marque`,`image`) values (?,?,?)";
+            $sql = "insert into produit (`nom`,`marque`,`image`,`dateajouter`) values (?,?,?,now())";
             $result = $db->prepare($sql);
             $result->execute(array($data['nomproduit'], $data['marqueproduit'],$data['imageproduit']));
             if ($result) {
@@ -112,6 +112,22 @@ $app->get('/produit', function() use ($app) {
         echo"||" . $value['nom'] . "||";
     }
 });
+
+$app->get('/image', function() use ($app) {
+    $db = getDB();
+    $sql = "SELECT id,image from produit LIMIT 5,1 ";
+    $stmt = $db->query($sql);
+    
+    
+    while ($items = $stmt->fetch()) {
+       
+        echo 'id==>'.$items['id'];
+        echo '<img src='."/webservice/".$items['image'].' >';
+        
+    }
+    $stmt->closeCursor();
+});
+
 
 
 $app->run();
