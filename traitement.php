@@ -3,6 +3,7 @@ session_start();
 
 require_once 'fonction.php';
 $fichier=array('name'=>"");
+$nomfichier="";
 if ($_POST['passe'] != "" and $_POST['nom'] != "") {
     
    if (isset($_FILES['monfichier']) AND $_FILES['monfichier']['error'] == 0) {
@@ -53,6 +54,6 @@ if ($_POST['passe'] != "" and $_POST['nom'] != "") {
     }
 } else {
 
-    header('Location: http://localhost/webservice/');
+    header('Location: http://localhost/webservice/indexform.php');
 }
 

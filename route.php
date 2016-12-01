@@ -2,28 +2,22 @@
 
 require 'confing.php';
 require 'Slim/Slim.php';
-
-
+\Slim\Slim::registerAutoloader();
+$app = new \Slim\Slim();
 
 function login($data, $db) {
-
     $sql = 'select  * from user where nom = ?  and  passe = ?';
-
-
     $result = $db->prepare($sql);
     $result->execute(array($data['nom'], $data['passe']));
     return $result->rowCount() != 0;
 }
 
-\Slim\Slim::registerAutoloader();
-$app = new \Slim\Slim();
 
 
 // select * or id
 $app->post('/idproduit', function() use ($app) {
-    $json = $app->request->getBody();
     $db = getDB();
-    $data = json_decode($json, true);
+    $data = json_decode($app->request->getBody(), true); // get json
 
     if (login($data, $db)) {
 
@@ -37,6 +31,7 @@ $app->post('/idproduit', function() use ($app) {
         }
         $result1 = $db->query($sql);
         $items = $result1->fetchAll(PDO::FETCH_OBJ);
+        var_dump($items);
         echo json_encode($items);
     } else {
         echo json_encode("");
@@ -44,9 +39,9 @@ $app->post('/idproduit', function() use ($app) {
 });
 //update
 $app->put('/idproduit', function() use ($app) {
-    $json = $app->request->getBody();
-    $db = getDB();
-    $data = json_decode($json, true);
+     $db = getDB();
+    $data = json_decode($app->request->getBody(), true); // get json
+    
     if (login($data, $db)) {
      $sql = "update produit set `nom` = ?,`marque` =?,`image` =? where id =?";
 
@@ -63,10 +58,8 @@ $app->put('/idproduit', function() use ($app) {
 });
 //delete
 $app->delete('/idproduit', function() use ($app) {
-
-    $json = $app->request->getBody();
     $db = getDB();
-    $data = json_decode($json, true);
+    $data = json_decode($app->request->getBody(), true); // get json
     if (login($data, $db)) {
         $sql = "delete from produit where id =?";
         $result = $db->prepare($sql);
@@ -82,9 +75,8 @@ $app->delete('/idproduit', function() use ($app) {
 });
 //insert
 $app->post('/produit', function() use ($app) {
-    $json = $app->request->getBody();
     $db = getDB();
-    $data = json_decode($json, true);
+    $data = json_decode($app->request->getBody(), true); // get json
         if (login($data, $db)) {
             $sql = "insert into produit (`nom`,`marque`,`image`,`dateajouter`) values (?,?,?,now())";
             $result = $db->prepare($sql);
@@ -112,6 +104,7 @@ $app->get('/produit', function() use ($app) {
         echo"||" . $value['nom'] . "||";
     }
 });
+
 
 $app->get('/image', function() use ($app) {
     $db = getDB();

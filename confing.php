@@ -14,4 +14,35 @@ die('Erreur data base: ' . $e->getMessage());
 }
 return $dbConnection;
 }
-?>
+
+
+
+class table{
+    
+    public $db;
+    public $table;
+    public $sql;
+    public $methode;
+    public $schema=array();
+    
+    
+    
+    public function select($id){
+        
+        return $res;
+    }
+    public function insert($id,$data){
+        
+        return $flage;
+    }
+    public function update($id,$data){
+        
+        return $flage;
+    }
+    public function delete($id,$data){
+        
+        return $flage;
+    }
+    
+    
+}
