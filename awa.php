@@ -14,16 +14,18 @@ class awa {
     private $niveau = 100;  // 1=> select// 2==+ insert// 3==+update //4==+delete //5==+sql{root}
 
     public function init($json, $file="") {
+//        echo'awa init==>';
+//        echo ($json);
         $this->file = $file;
         $this->db = getDB();
         $this->data = json_decode($json, true);
 
         $this->login = isset($this->data['login']) ? $this->data['login'] : "";
-        $this->table = isset($this->data['table'])and $this->data['table']=="user"  ? $this->data['table'] : "";
+        $this->table = (isset($this->data['table'])and $this->data['table']!="user")  ? $this->data['table'] : "";
        
         $this->ID = isset($this->data['id']) ? $this->data['id'] : "";
         $this->op = isset($this->data['op']) ? $this->data['op'] : "";
-        $this->row = isset($this->data['row']) ? $this->data['row'] : "";
+        $this->row = isset($this->data['row']) ? $this->data['row'] : "*";
         $this->sql = isset($this->data['sql']) ? $this->data['sql'] : "";
         $this->niveau = $this->login();
 
@@ -51,6 +53,7 @@ class awa {
 
 
         if ($fichier != "") {
+            
             $p = pathinfo($fichier['name']);
             $nomfichier = 'FICHIER/s' . time() . "s." . $p['extension'];
             if ($fichier['size'] <= 1000000) {
@@ -113,6 +116,9 @@ class awa {
     }
 
     private function row_style_SELECT() {
+        if ($this->row=="*") {
+          $l="*";  
+        }else{
         $l = "";
         foreach ($this->row as $x => $x_value) {
             if ($l == "") {
@@ -120,7 +126,7 @@ class awa {
             } else {
                 $l .= " , " . '`' . $x . '`';
             }
-        }
+        }}
 
         return $l;
     }
@@ -158,13 +164,15 @@ if($this->niveau>2){
         
     if($this->niveau>0){
         $sql = 'select  '
-                . 'id ,'
+                
                 . $this->row_style_SELECT()
                 . '  from '
                 . $this->table
                 . '  where id  '
                 . $this->op
                 . $this->ID;
+        echo $sql;
+        
         $stmt = $this->db->query($sql);
         $items = $stmt->fetchAll(PDO::FETCH_OBJ);
         var_dump($items);

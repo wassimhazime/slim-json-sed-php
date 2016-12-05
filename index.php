@@ -15,8 +15,44 @@ if (isset($_FILES['monfichier'])) {
     }
 }
 
+
+
+$app->options('/', function ()use ($app, $operationDB, $fichier) {
+    $json = $app->request->getBody();
+    
+    $operationDB->init($json, $fichier);
+    $operationDB->SQL();
+});
+$app->patch('/', function ()use ($app, $operationDB) {
+
+    $json = $app->request->getBody();
+    $operationDB->init($json);
+    $operationDB->SELECT();
+});
+$app->post('/', function ()use ($app, $operationDB, $fichier) {
+    $json = $app->request->getBody();
+    $operationDB->init($json, $fichier);
+    $operationDB->INSERT();
+});
+$app->put('/', function ()use ($app, $operationDB, $fichier) {
+    $json = $app->request->getBody();
+    $operationDB->init($json, $fichier);
+    $operationDB->UPDATE();
+});
+$app->delete('/', function ()use ($app, $operationDB) {
+    $json = $app->request->getBody();
+    $operationDB->init($json);
+    $operationDB->DELETE();
+});
+
+
+
+
+
 $app->get('/', function() use ($app, $operationDB, $fichier) {
-    $json = json_encode(array(
+
+    echo 'webservice';
+    echo '   $json = json_encode(array(
         "login" => array(
             "nom" => "admin",
             "passe" => "admin",
@@ -29,20 +65,9 @@ $app->get('/', function() use ($app, $operationDB, $fichier) {
             "marque" => "awa",
             "image" => "java.jpg",
             "dateajouter" => "2016-12-21 01:55:56"),
-        "sql" => "select * from produit "));
-
-    var_dump($json);
-    $operationDB->init($json);
-    $operationDB->SQL();
+        "sql" => "select * from produit "));';
 });
-
-$app->post('/', function ()use ($app, $operationDB, $fichier) {
-    $json = $app->request->getBody();
-    $operationDB->init($json, $fichier);
-    $operationDB->SQL();
-});
-
-
 $app->run();
+echo 'ok';
 
 
