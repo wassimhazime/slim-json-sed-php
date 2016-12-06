@@ -1,6 +1,8 @@
 <?php
-require 'confing.php';
-class awa {
+require_once 'DataBase.php';
+require_once 'Login.php';
+require_once 'Niveau.php';
+class JSON_SQL {
 
     private $db;
     private $data = "";
@@ -10,14 +12,19 @@ class awa {
     private $op = "";
     private $row = "";
     private $sql = "";
-    private $file = "";
-    private $niveau = 100;  // 1=> select// 2==+ insert// 3==+update //4==+delete //5==+sql{root}
 
-    public function init($json, $file="") {
-//        echo'awa init==>';
-//        echo ($json);
-        $this->file = $file;
-        $this->db = getDB();
+    private $niveau = 100;  // 1=> select// 2==+ insert// 3==+update //4==+delete //5==+sql{root}
+    function __construct() {
+     $this->db = getDB();   
+    }
+
+        public function init($json) {
+
+        $this->niveau = Login::loginn($json);
+        if ($this->niveau== Niveau::error) {
+            die();
+        }
+        
         $this->data = json_decode($json, true);
 
         $this->login = isset($this->data['login']) ? $this->data['login'] : "";
@@ -27,62 +34,14 @@ class awa {
         $this->op = isset($this->data['op']) ? $this->data['op'] : "";
         $this->row = isset($this->data['row']) ? $this->data['row'] : "*";
         $this->sql = isset($this->data['sql']) ? $this->data['sql'] : "";
-        $this->niveau = $this->login();
+        
 
-        $this->saveimage($this->file);
+        
     }
 
-    private function login() {
-
-        if (isset($this->login['table'])and isset($this->login['nom']) and isset($this->login['passe'])) {
-            $sql = 'select  perm from  ' . $this->login['table'] .
-                    '  where nom = \'' . $this->login['nom'] . '\'' .
-                    '  and '
-                    . ' passe = \'' . md5($this->login['passe']) . '\'';
-            $items = $this->db->query($sql)->fetchAll();
-            if (isset($items[0]['perm'])) {
-                return $items[0]['perm'];
-            }
-        } else {
-            echo 'erreur data login json';
-            return 0;
-        }
-    }
-
-    private function saveimage($fichier) {
+    
 
 
-        if ($fichier != "") {
-            
-            $p = pathinfo($fichier['name']);
-            $nomfichier = 'FICHIER/s' . time() . "s." . $p['extension'];
-            if ($fichier['size'] <= 1000000) {
-                move_uploaded_file($fichier['tmp_name'], $nomfichier);
-                if ($p['extension'] == 'jpg') {
-                    $this->Redimensionner_jpg($nomfichier, $nomfichier);
-                }
-            }
-        }
-    }
-
-    private function Redimensionner_jpg($image, $mini) {
-
-
-        $source = imagecreatefromjpeg($image); // La photo est la source
-        $destination = imagecreatetruecolor(80, 80); // On crée la miniature vide
-// Les fonctions imagesx et imagesy renvoient la largeur et la hauteur d'une image
-        $largeur_source = imagesx($source);
-        $hauteur_source = imagesy($source);
-        $largeur_destination = imagesx($destination);
-        $hauteur_destination = imagesy($destination);
-
-        // On crée la miniature
-        imagecopyresampled($destination, $source, 0, 0, 0, 0, $largeur_destination, $hauteur_destination, $largeur_source, $hauteur_source);
-// On enregistre la miniature sous le nom "mini_couchersoleil.jpg"
-        imagejpeg($destination, $mini);
-    }
-
-//Redimensionner_jpg('hh.jpg','awa.jpg');
 
     private function row_style_INSERT() {
 

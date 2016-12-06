@@ -1,0 +1,14 @@
+//    echo '   $json = json_encode(array(
+//        "login" => array(
+//            "nom" => "admin",
+//            "passe" => "admin",
+//            "table" => "user"),
+//        "table" => "produit",
+//        "id" => "id",
+//        "op" => ">",
+//        "row" => array(
+//            "nom" => "awaservice",
+//            "marque" => "awa",
+//            "image" => "java.jpg",
+//            "dateajouter" => "2016-12-21 01:55:56"),
+//        "sql" => "select * from produit "));';
